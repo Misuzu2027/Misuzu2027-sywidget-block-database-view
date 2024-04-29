@@ -1,0 +1,25 @@
+{
+  "name": "block-database-view",
+  "author": "Misuzu2027",
+  "url": "https://github.com/Misuzu2027/sywidget-block-database-view",
+  "version": "0.0.1",
+  "minAppVersion": "3.0.5",
+  "displayName": {
+    "default": "Block database view",
+    "zh_CN": "块数据库视图"
+  },
+  "description": {
+    "default": "Display database data for specified block",
+    "zh_CN": "显示指定块的数据库数据"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "keywords": [
+    "database",
+    "attribute view",
+    "数据库",
+    "展示"
+  ]
+}
