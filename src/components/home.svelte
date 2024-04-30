@@ -24,6 +24,8 @@
 
         await SettingConfig.ins.load();
         refreshCssLink();
+        selectAttributeTabId =
+            SettingConfig.ins.widgetSettingDto.lastSelectAvId;
         await refreshBlockAttributeData();
 
         // const endTime = performance.now(); // 记录结束时间
@@ -98,6 +100,7 @@
             selectTabType = tabType;
             selectAttributeTabId = tabId;
             SettingConfig.ins.widgetSettingDto.lastSelectAvId = tabId;
+            SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
             refreshBlockAttributeData();
         }
         console.log(

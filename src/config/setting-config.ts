@@ -29,7 +29,12 @@ export class SettingConfig {
         }
 
         try {
-            this.widgetSettingDto = new WidgetAttrSettingDto(null, this.widgetGlobalSettingDto.defaultColumns, this.widgetGlobalSettingDto.defaultFilterEmpty);
+            this.widgetSettingDto = new WidgetAttrSettingDto(
+                null,
+                this.widgetGlobalSettingDto.defaultColumns,
+                this.widgetGlobalSettingDto.defaultFilterEmpty,
+                this.widgetGlobalSettingDto.defaultCollapsed
+            );
 
             this.widgetBlockId = getCurrentWidgetId();
 
@@ -43,7 +48,7 @@ export class SettingConfig {
                 let defalutTargetBlockId = widgetRootId ? widgetRootId : this.widgetBlockId;
                 this.widgetSettingDto.targetBlockId = defalutTargetBlockId;
             }
-            this.widgetCollapsed = this.widgetSettingDto.defaultCollapsed;
+            this.widgetCollapsed = this.widgetSettingDto.openDocAutoCollapsed;
         } catch (e) {
 
         }

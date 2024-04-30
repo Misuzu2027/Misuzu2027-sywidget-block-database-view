@@ -103,9 +103,9 @@ function contentFilterValid(cellValue: IAVCellValue): boolean {
             content = '1';
             break;
         case "template":
-            content = cellValue.template.content.trim();
-            if (content == "<no value>") {
-                content = null;
+            content = cellValue.template.content;
+            if (content) {
+                content = content.replace("<no value>", "").trim();
             }
             break;
         case "email":

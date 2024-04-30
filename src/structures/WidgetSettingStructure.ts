@@ -5,13 +5,13 @@ export class WidgetAttrSettingDto {
     lastSelectAvId: string;
     columns: number;
     filterEmpty: boolean;
-    defaultCollapsed: boolean;
+    openDocAutoCollapsed: boolean;
 
-    constructor(targetBlockId: string, columns: number, filterEmpty: boolean) {
+    constructor(targetBlockId: string, columns: number, filterEmpty: boolean,openDocAutoCollapsed:boolean) {
         this.targetBlockId = targetBlockId;
         this.columns = columns;
         this.filterEmpty = filterEmpty;
-        this.defaultCollapsed = false;
+        this.openDocAutoCollapsed = openDocAutoCollapsed;
     }
 }
 
@@ -23,11 +23,13 @@ export class WidgetGlobalSettingDto {
     defaultColumns: number;
     defaultFilterEmpty: boolean;
     useThirdPartyThemeStyles: boolean;
+    defaultCollapsed: boolean;
 
     constructor() {
         this.defaultColumns = 1;
         this.defaultFilterEmpty = false;
         this.useThirdPartyThemeStyles = false;
+        this.defaultCollapsed = false;
     }
 }
 

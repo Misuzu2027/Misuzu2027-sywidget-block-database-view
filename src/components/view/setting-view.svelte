@@ -9,7 +9,6 @@
     };
 
     function clickSaveButton() {
-
         SettingConfig.ins.update(widgetSettingDto);
     }
 
@@ -56,12 +55,12 @@
             />
         </div>
         <div class="fn__flex div_bottom">
-            <div class="fn__flex-1">默认折叠：</div>
+            <div class="fn__flex-1">自动折叠：</div>
             <span class="fn__space"></span>
             <input
                 class="b3-switch fn__flex-center"
                 type="checkbox"
-                bind:checked={widgetSettingDto.defaultCollapsed}
+                bind:checked={widgetSettingDto.openDocAutoCollapsed}
             />
         </div>
 
@@ -102,6 +101,15 @@
                 bind:checked={widgetGlobakSettingDto.useThirdPartyThemeStyles}
             />
         </div>
+        <div class="fn__flex div_bottom">
+            <div class="fn__flex-1">默认折叠：</div>
+            <span class="fn__space"></span>
+            <input
+                class="b3-switch fn__flex-center"
+                type="checkbox"
+                bind:checked={widgetGlobakSettingDto.defaultCollapsed}
+            />
+        </div>
 
         <div class="flex_center" style="flex-basis: 100%;">
             <button class="b3-button" on:click={clickSaveGlobalButton}
@@ -114,7 +122,7 @@
 <style>
     .fn__flex {
         display: flex;
-        flex: 1 0 45%;
+        flex: 1 0 43%;
         border-image: linear-gradient(
                 to right,
                 transparent,
