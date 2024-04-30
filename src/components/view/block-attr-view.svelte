@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { AttributeTableDto } from "@/structures/AttributeTableStructure";
     import { afterUpdate } from "svelte";
+    import { AttributeTableDto } from "@/structures/AttributeTableStructure";
     import { SettingConfig } from "@/config/setting-config";
+    import { openRefLink } from "@/utils/ref-util";
 
     export let tableDto: AttributeTableDto;
     let rowFlexBasisPercent = "99%";
@@ -33,6 +34,23 @@
         frameElement.style.width = "2048px";
     }
 
+    function contentClick(event) {
+        let clickElement = event.target;
+        if (
+            !clickElement.hasAttribute("data-type") ||
+            clickElement.getAttribute("data-type") !== "block-ref"
+        ) {
+            return;
+        }
+        // 检查元素是否存在 data-id 属性
+        if (!clickElement.hasAttribute("data-id")) {
+            return;
+        }
+        let blockId = clickElement.getAttribute("data-id");
+        openRefLink(event, blockId);
+    }
+
+    function handleKeyDownDefault() {}
     /**
      *
      */
@@ -48,7 +66,11 @@
                 {@html item.icon}
                 <span class="text-white-space-wrap">{@html item.name}</span>
             </div>
-            <div class="fn__flex-1 fn__flex block__logo-content">
+            <div
+                class="fn__flex-1 fn__flex block__logo-content"
+                on:click={contentClick}
+                on:keydown={handleKeyDownDefault}
+            >
                 {@html item.content}
                 <!-- <div class="fn__flex-1">{@html item.content}</div> -->
             </div>
@@ -74,8 +96,6 @@
         width: 120px;
         align-self: center;
         margin-top: 2px;
-    }
-    .text-white-space-wrap {
-        white-space: wrap; /* 超出宽度文字换行 */
+        flex-wrap: wrap;
     }
 </style>

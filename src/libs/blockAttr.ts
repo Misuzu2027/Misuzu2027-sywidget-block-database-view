@@ -6,9 +6,9 @@ const genAVRollupHTML = (value: IAVCellValue) => {
     switch (value.type) {
         case "block":
             if (value?.isDetached) {
-                html = `<span data-id="${value.block?.id}">${value.block?.content || "未命名"}</span>`;
+                html = `<span data-id="${value.block?.id}" class="text-white-space-wrap">${value.block?.content || "未命名"}</span>`;
             } else {
-                html = `<span data-type="block-ref" data-id="${value.block?.id}" data-subtype="s" class="av__celltext--ref">${value.block?.content || "未命名"}</span>`;
+                html = `<span data-type="block-ref" data-id="${value.block?.id}" data-subtype="s" class="av__celltext--ref text-white-space-wrap" >${value.block?.content || "未命名"}</span>`;
             }
             break;
         case "text":

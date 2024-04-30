@@ -103,9 +103,9 @@
             SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
             refreshBlockAttributeData();
         }
-        console.log(
-            `clickTab selectTabType : ${selectTabType} , tabType ${tabType}`,
-        );
+        // console.log(
+        //     `clickTab selectTabType : ${selectTabType} , tabType ${tabType}`,
+        // );
     }
 
     function handleKeyDownDefault() {}

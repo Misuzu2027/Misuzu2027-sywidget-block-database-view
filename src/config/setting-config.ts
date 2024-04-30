@@ -1,4 +1,4 @@
-import { getBlockAttrs, getBlockByID, getCurrentDocId, getCurrentWidgetId, getLocalStorage, setBlockAttrs, setStorageVal } from "@/utils/api";
+import { getBlockAttrs, getCurrentWidgetId, getLocalStorage, getDefaultTargetBlockId, setBlockAttrs, setStorageVal } from "@/utils/api";
 import { WIDGET_SETTING_ATTRIBUTE_NAME, WIDGET_SETTING_LOCAL_STORAGE_NAME, WidgetAttrSettingDto, WidgetGlobalSettingDto } from "@/structures/WidgetSettingStructure";
 import Instance from "@/utils/Instance";
 
@@ -44,11 +44,19 @@ export class SettingConfig {
                 this.widgetSettingDto = { ...this.widgetSettingDto, ...JSON.parse(settringDtoStr) };
             }
             if (!this.widgetSettingDto.targetBlockId) {
-                let widgetRootId = await getCurrentDocId();
-                let defalutTargetBlockId = widgetRootId ? widgetRootId : this.widgetBlockId;
-                this.widgetSettingDto.targetBlockId = defalutTargetBlockId;
+                let targetBlockId = await getDefaultTargetBlockId(this.widgetGlobalSettingDto.defaultGetTargetBlockMethod);
+                this.widgetSettingDto.targetBlockId = targetBlockId;
             }
-            this.widgetCollapsed = this.widgetSettingDto.openDocAutoCollapsed;
+            // 如果不存在属性，说明是第一次创建，默认不折叠，并保存配置。
+            if (settringDtoStr) {
+                this.widgetCollapsed = this.widgetSettingDto.openDocAutoCollapsed;
+            } else {
+                this.widgetCollapsed = false;
+                // 延迟0.4秒保存，因为挂件可能还没被索引，直接保存会失败。
+                setTimeout(() => {
+                    this.update(this.widgetSettingDto);
+                }, 400);
+            }
         } catch (e) {
 
         }

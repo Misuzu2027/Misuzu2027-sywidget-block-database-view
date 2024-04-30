@@ -113,6 +113,9 @@ export async function getBlockByID(blockId: string): Promise<Block> {
 // **************************************** Database ****************************************
 
 export async function getAttributeViewKeys(id: string): Promise<AttributeViewKey[]> {
+    if (!id) {
+        return null;
+    }
     return request('/api/av/getAttributeViewKeys', { id: id });
 }
 
@@ -236,3 +239,32 @@ export function getCurrentWidgetId() {
 export function isMobile() {
     return window.top.document.getElementById("sidebar") ? true : false;
 };
+
+
+
+
+export async function getDefaultTargetBlockId(method: "RootBlock" | "PreviousBlock" | "NextBlock") {
+    let targetBlockId;//目标任务列表块id
+    let thisWidgetBlockElem = window.frameElement.parentElement.parentElement;
+
+    switch (method) {
+        case "RootBlock":
+            targetBlockId = await getCurrentDocId();
+            break;
+        case "PreviousBlock":
+            if (thisWidgetBlockElem.previousElementSibling) {
+                targetBlockId = thisWidgetBlockElem.previousElementSibling.getAttribute("data-node-id");
+            }
+            break;
+        case "NextBlock":
+            if (thisWidgetBlockElem.nextElementSibling) {
+                targetBlockId = thisWidgetBlockElem.nextElementSibling.getAttribute("data-node-id");
+            }
+            break;
+    }
+
+    return targetBlockId;
+}
+
+
+

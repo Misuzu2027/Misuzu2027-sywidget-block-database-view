@@ -7,7 +7,7 @@ export class WidgetAttrSettingDto {
     filterEmpty: boolean;
     openDocAutoCollapsed: boolean;
 
-    constructor(targetBlockId: string, columns: number, filterEmpty: boolean,openDocAutoCollapsed:boolean) {
+    constructor(targetBlockId: string, columns: number, filterEmpty: boolean, openDocAutoCollapsed: boolean) {
         this.targetBlockId = targetBlockId;
         this.columns = columns;
         this.filterEmpty = filterEmpty;
@@ -20,12 +20,14 @@ export const WIDGET_SETTING_ATTRIBUTE_NAME = "custom-wideht-database-view-settin
 
 
 export class WidgetGlobalSettingDto {
+    defaultGetTargetBlockMethod: "RootBlock" | "PreviousBlock" | "NextBlock";
     defaultColumns: number;
     defaultFilterEmpty: boolean;
     useThirdPartyThemeStyles: boolean;
     defaultCollapsed: boolean;
 
     constructor() {
+        this.defaultGetTargetBlockMethod = "RootBlock";
         this.defaultColumns = 1;
         this.defaultFilterEmpty = false;
         this.useThirdPartyThemeStyles = false;

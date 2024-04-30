@@ -383,3 +383,16 @@ input {
     background-color: #fff;
     box-shadow: 0 1px 4px -1px rgba(0, 0, 0, .2);
 }
+
+.av__celltext--ref {
+    border-bottom: .5px solid var(--b3-border-color);
+}
+
+span[data-type~=block-ref][data-id].av__celltext--ref {
+    cursor: pointer;
+}
+
+.text-white-space-wrap {
+    /* 超出宽度文字换行 */
+    white-space: wrap;
+}

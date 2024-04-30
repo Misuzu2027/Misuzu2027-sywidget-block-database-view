@@ -71,6 +71,18 @@
     <div class="flex_center">
         <h3 class="fn__flex flex_center" style="flex-basis: 100%;">全局设置</h3>
         <div class="fn__flex div_bottom">
+            <div class="fn__flex-1">读取块ID方式：</div>
+            <span class="fn__space"></span>
+            <select
+                class="b3-select fn__flex-center fn__size200"
+                bind:value={widgetGlobakSettingDto.defaultGetTargetBlockMethod}
+            >
+                <option value="RootBlock">当前文档块</option>
+                <option value="PreviousBlock">挂件上方块</option>
+                <option value="NextBlock">挂件下方块</option>
+            </select>
+        </div>
+        <div class="fn__flex div_bottom">
             <div class="fn__flex-1">默认列数：</div>
             <span class="fn__space"></span>
             <input
