@@ -10,10 +10,13 @@
     import { refreshCssLink } from "@/utils/htmlUtil";
     import SettingView from "./view/setting-view.svelte";
     import { processAttributeData } from "@/services/block-database";
+    import { openRefLink } from "@/utils/ref-util";
+
     let allTableDtoMap: Map<string, AttributeTableDto> = new Map();
     let selectTableDto: AttributeTableDto;
     let selectTabType: TabType;
     let selectAttributeTabId: string;
+    let avTabClickCount = 0;
 
     onMount(() => {
         init();
@@ -71,12 +74,15 @@
             contentHeight =
                 document.getElementById("top-navigation-bar").offsetHeight + 20;
         }
+        if (contentHeight <= 30) {
+            return;
+        }
         let frameElement = window.frameElement as HTMLElement;
         frameElement.style.height = contentHeight + "px";
         frameElement.style.width = "2048px";
     }
 
-    function clickTab(event: MouseEvent, tabType: TabType, tabId: string) {
+    function clickTab(event: MouseEvent, tabType: TabType) {
         if (tabType == TabType.REFRESH_TAB) {
             let clickElement = event.currentTarget as HTMLElement;
             let className = "item--focus";
@@ -96,16 +102,44 @@
         } else if (tabType == TabType.SETTINGS_TAB) {
             selectTabType = tabType;
             selectTableDto = null;
-        } else if (tabType == TabType.ATTRIBUTE_TAB) {
-            selectTabType = tabType;
-            selectAttributeTabId = tabId;
-            SettingConfig.ins.widgetSettingDto.lastSelectAvId = tabId;
-            SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
-            refreshBlockAttributeData();
         }
         // console.log(
         //     `clickTab selectTabType : ${selectTabType} , tabType ${tabType}`,
         // );
+    }
+
+    function clickAttributeTab(
+        event: MouseEvent,
+        tabType: TabType,
+        avId: string,
+    ) {
+        if (tabType != TabType.ATTRIBUTE_TAB) {
+            return;
+        }
+        avTabClickCount++;
+
+        if (avTabClickCount === 1) {
+            selectTabType = tabType;
+            selectAttributeTabId = avId;
+            SettingConfig.ins.widgetSettingDto.lastSelectAvId = avId;
+            SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
+            refreshBlockAttributeData();
+            setTimeout(() => {
+                avTabClickCount = 0; // 重置计数
+            }, 210);
+        }
+        if (
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey ||
+            avTabClickCount === 2
+        ) {
+            let dto: AttributeTableDto = allTableDtoMap.get(avId);
+            let blockId = dto.blockIds[0];
+            // 打开存在该数据库的节点
+            openRefLink(event, blockId);
+            avTabClickCount = 0; // 重置计数
+        }
     }
 
     function handleKeyDownDefault() {}
@@ -127,7 +161,7 @@
             }}
             on:keydown={handleKeyDownDefault}
             on:click={(event) => {
-                clickTab(event, TabType.REFRESH_TAB, null);
+                clickTab(event, TabType.REFRESH_TAB);
             }}
         >
             <span class="block__icon block__icon--show">
@@ -144,7 +178,7 @@
             }}
             on:keydown={handleKeyDownDefault}
             on:click={(event) => {
-                clickTab(event, TabType.COLLAPSED_TAB, null);
+                clickTab(event, TabType.COLLAPSED_TAB);
             }}
         >
             {#if SettingConfig.ins.widgetCollapsed}
@@ -164,7 +198,7 @@
                 ? 'item--focus'
                 : ''}"
             on:click={(event) => {
-                clickTab(event, TabType.SETTINGS_TAB, null);
+                clickTab(event, TabType.SETTINGS_TAB);
             }}
             on:keydown={handleKeyDownDefault}
         >
@@ -183,7 +217,7 @@
                     ? 'item--focus'
                     : ''} "
                 on:click={(event) => {
-                    clickTab(event, TabType.ATTRIBUTE_TAB, item.avId);
+                    clickAttributeTab(event, TabType.ATTRIBUTE_TAB, key);
                 }}
                 on:keydown={handleKeyDownDefault}
             >

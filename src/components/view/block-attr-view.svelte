@@ -2,7 +2,7 @@
     import { afterUpdate } from "svelte";
     import { AttributeTableDto } from "@/structures/AttributeTableStructure";
     import { SettingConfig } from "@/config/setting-config";
-    import { openRefLink } from "@/utils/ref-util";
+    import { openImage, openRefLink } from "@/utils/ref-util";
 
     export let tableDto: AttributeTableDto;
     let rowFlexBasisPercent = "99%";
@@ -28,14 +28,22 @@
             contentHeight =
                 document.getElementById("top-navigation-bar").offsetHeight + 20;
         }
-
+        if (contentHeight <= 30) {
+            return;
+        }
         let frameElement = window.frameElement as HTMLElement;
         frameElement.style.height = contentHeight + "px";
         frameElement.style.width = "2048px";
     }
 
     function contentClick(event) {
+        clickRefLink(event);
+        clickImg(event);
+    }
+
+    function clickRefLink(event) {
         let clickElement = event.target;
+
         if (
             !clickElement.hasAttribute("data-type") ||
             clickElement.getAttribute("data-type") !== "block-ref"
@@ -48,6 +56,19 @@
         }
         let blockId = clickElement.getAttribute("data-id");
         openRefLink(event, blockId);
+    }
+
+    function clickImg(event) {
+        let clickElement = event.target;
+
+        if (
+            clickElement.tagName !== "IMG" ||
+            !clickElement.hasAttribute("src")
+        ) {
+            return;
+        }
+        let src = clickElement.getAttribute("src");
+        openImage(event, src);
     }
 
     function handleKeyDownDefault() {}

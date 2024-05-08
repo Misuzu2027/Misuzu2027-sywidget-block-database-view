@@ -37,3 +37,31 @@ export function openRefLink(event, paramId = "") {
     虚拟链接.dispatchEvent(clickEvent);
     虚拟链接.remove();
 }
+
+
+export function openImage(event, src = "") {
+
+    let parentDocument = window.parent.document
+
+    // 处理笔记本等无法跳转的情况
+    if (!isNotBlankStr(src)) { return; }
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    let imgElement = parentDocument.createElement("img")
+    imgElement.classList.add("av__cellassetimg");
+    imgElement.setAttribute("src", src)
+    imgElement.style.display = "none";//不显示虚拟链接，防止视觉干扰
+    let tempParentElement = parentDocument.querySelector(".protyle-wysiwyg div[data-node-id] div[contenteditable]")
+    tempParentElement.appendChild(imgElement);
+    let clickEvent = new MouseEvent("click", {
+        ctrlKey: event ? event.ctrlKey : undefined,
+        shiftKey: true,
+        altKey: event ? event.altKey : undefined,
+        bubbles: true
+    });
+    imgElement.dispatchEvent(clickEvent);
+    imgElement.remove();
+}

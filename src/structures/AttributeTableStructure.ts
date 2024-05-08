@@ -1,6 +1,7 @@
 export class AttributeTableDto {
 
     avId: string;
+    blockIds: string[]; // 数据库所在的节点ID列表
     avName: string;
     attributes: AttributeRowDto[]
 

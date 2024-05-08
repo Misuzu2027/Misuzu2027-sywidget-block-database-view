@@ -19,6 +19,7 @@ export function processAttributeData(
         let tableDto = new AttributeTableDto();
         let attributeDtos: AttributeRowDto[] = [];
         let avId = table.avID;
+        let blockIds = table.blockIDs;
         let avName = table.avName;
 
         for (const keyValue of table.keyValues) {
@@ -50,6 +51,7 @@ export function processAttributeData(
             attributeDtos.push(atrDto);
         }
         tableDto.avId = avId;
+        tableDto.blockIds = blockIds;
         tableDto.avName = avName;
         tableDto.attributes = attributeDtos;
         tableDtoMap.set(avId, tableDto);

@@ -45,7 +45,13 @@ export const genAVValueHTML = (value: IAVCellValue) => {
     let html = "";
     switch (value.type) {
         case "block":
-            html = `<div class="fn__flex-1">${value.block.content}</div>`;
+            console.log("blockblockblockblock")
+            if (value.isDetached) {
+                html = `<div class="fn__flex-1">${value.block.content}</div>`;
+            } else {
+                html = `<span data-type="block-ref" data-id="${value.block?.id}" data-subtype="s" class="av__celltext--ref text-white-space-wrap" >${value.block?.content || "未命名"}</span>`;
+                // html = `<div class="fn__flex-1">${value.block.content}</div>`;
+            }
             break;
         case "text":
             html = `<textarea rows="${value.text.content.split("\n").length}" class="b3-text-field b3-text-field--text fn__flex-1" disabled>${value.text.content}</textarea>`;

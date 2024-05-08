@@ -396,3 +396,7 @@ span[data-type~=block-ref][data-id].av__celltext--ref {
     /* 超出宽度文字换行 */
     white-space: wrap;
 }
+
+img {
+    cursor: pointer;
+}
