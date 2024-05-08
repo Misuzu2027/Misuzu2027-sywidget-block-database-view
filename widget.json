@@ -2,7 +2,7 @@
   "name": "block-database-view",
   "author": "Misuzu2027",
   "url": "https://github.com/Misuzu2027/sywidget-block-database-view",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "minAppVersion": "3.0.5",
   "displayName": {
     "default": "Block database view",
