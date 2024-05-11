@@ -29,8 +29,8 @@ export function refreshCssLink() {
             continue;
         }
         try {
-            let curlinkHref = fromatCssLink(curLink.href);
-            if (!isValidLink(curlinkHref)) {
+            let curLinkHref = formatCssLink(curLink.href);
+            if (!isValidLink(curLinkHref)) {
                 continue;
             }
 
@@ -42,7 +42,7 @@ export function refreshCssLink() {
             let _link = document.createElement("link");
             _link.rel = "stylesheet";
             _link.type = "text/css";
-            _link.href = curlinkHref;
+            _link.href = curLinkHref;
 
             head.insertBefore(_link, indexStylesheetLink);
         } catch (e) {
@@ -81,12 +81,13 @@ function isValidLink(curlinkHref: string): boolean {
 
     return false;
 }
-function fromatCssLink(curlinkHref: string): string {
 
-    if (curlinkHref.indexOf("/base.") >= 0) {
-        curlinkHref = curlinkHref.replace("/base.", "/stage/build/app/base.");
+function formatCssLink(curLinkHref: string): string {
+
+    if (curLinkHref.indexOf("/base.") >= 0) {
+        curLinkHref = curLinkHref.replace("/base.", "/stage/build/app/base.");
     }
-    return curlinkHref;
+    return curLinkHref;
 }
 
 function isLinkExists(curlinkHref): boolean {

@@ -45,7 +45,6 @@ export const genAVValueHTML = (value: IAVCellValue) => {
     let html = "";
     switch (value.type) {
         case "block":
-            console.log("blockblockblockblock")
             if (value.isDetached) {
                 html = `<div class="fn__flex-1">${value.block.content}</div>`;
             } else {

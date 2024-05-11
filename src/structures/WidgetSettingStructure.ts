@@ -1,17 +1,23 @@
+import { TabType } from "./AttributeTableStructure";
 
 
 export class WidgetAttrSettingDto {
     targetBlockId: string;
+    lastSelectTabType: TabType;
     lastSelectAvId: string;
     columns: number;
     filterEmpty: boolean;
     openDocAutoCollapsed: boolean;
+    showBuiltInAttr: boolean;
+    showCustomAttr: boolean;
 
-    constructor(targetBlockId: string, columns: number, filterEmpty: boolean, openDocAutoCollapsed: boolean) {
-        this.targetBlockId = targetBlockId;
-        this.columns = columns;
-        this.filterEmpty = filterEmpty;
-        this.openDocAutoCollapsed = openDocAutoCollapsed;
+    constructor(globalSettingDto: WidgetGlobalSettingDto) {
+        this.targetBlockId = null;
+        this.columns = globalSettingDto.defaultColumns;
+        this.filterEmpty = globalSettingDto.defaultFilterEmpty;
+        this.openDocAutoCollapsed = globalSettingDto.defaultCollapsed;
+        this.showBuiltInAttr = globalSettingDto.defaultShowBuiltInAttr;
+        this.showCustomAttr = globalSettingDto.defaultShowCustomAttr;
     }
 }
 
@@ -23,15 +29,19 @@ export class WidgetGlobalSettingDto {
     defaultGetTargetBlockMethod: "RootBlock" | "PreviousBlock" | "NextBlock";
     defaultColumns: number;
     defaultFilterEmpty: boolean;
-    useThirdPartyThemeStyles: boolean;
     defaultCollapsed: boolean;
+    defaultShowBuiltInAttr: boolean;
+    defaultShowCustomAttr: boolean;
+    useThirdPartyThemeStyles: boolean;
 
     constructor() {
         this.defaultGetTargetBlockMethod = "RootBlock";
         this.defaultColumns = 1;
         this.defaultFilterEmpty = false;
-        this.useThirdPartyThemeStyles = false;
         this.defaultCollapsed = false;
+        this.defaultShowBuiltInAttr = false;
+        this.defaultShowCustomAttr = false;
+        this.useThirdPartyThemeStyles = false;
     }
 }
 

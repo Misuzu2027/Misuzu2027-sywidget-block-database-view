@@ -30,10 +30,7 @@ export class SettingConfig {
 
         try {
             this.widgetSettingDto = new WidgetAttrSettingDto(
-                null,
-                this.widgetGlobalSettingDto.defaultColumns,
-                this.widgetGlobalSettingDto.defaultFilterEmpty,
-                this.widgetGlobalSettingDto.defaultCollapsed
+                this.widgetGlobalSettingDto
             );
 
             this.widgetBlockId = getCurrentWidgetId();
@@ -52,10 +49,10 @@ export class SettingConfig {
                 this.widgetCollapsed = this.widgetSettingDto.openDocAutoCollapsed;
             } else {
                 this.widgetCollapsed = false;
-                // 延迟0.4秒保存，因为挂件可能还没被索引，直接保存会失败。
+                // 延迟0.5秒保存，因为挂件可能还没被索引，直接保存会失败。
                 setTimeout(() => {
                     this.update(this.widgetSettingDto);
-                }, 400);
+                }, 500);
             }
         } catch (e) {
 

@@ -1,5 +1,7 @@
 <script lang="ts">
-    import BlockAttrViewSvelte from "@/components/view/block-attr-view.svelte";
+    import BlockDatabaseViewSvelte from "@/components/view/block-database-view.svelte";
+    import BlockBuiltInAttrViewSvelte from "@/components/view/block-built-in-attr-view.svelte";
+    import BlockCustomAttrViewSvelte from "@/components/view/block-custom-attr-view.svelte";
     import { afterUpdate, onMount } from "svelte";
     import { getAttributeViewKeys } from "@/utils/api";
     import {
@@ -17,18 +19,37 @@
     let selectTabType: TabType;
     let selectAttributeTabId: string;
     let avTabClickCount = 0;
+    let showBuiltInAttr = false;
+    let showCustomAttr = false;
 
     onMount(() => {
         init();
     });
 
+    // 当发生变化时重新渲染，并在渲染完成后执行afterRender函数
+    $: {
+        afterUpdate(afterRender);
+    }
+
+    function afterRender() {
+        setFrameHeight();
+        setTimeout(() => {
+            setFrameHeight();
+        }, 120);
+    }
+
     async function init() {
         // const startTime = performance.now(); // 记录开始时间
-
         await SettingConfig.ins.load();
+
+        allTableDtoMap = new Map();
         refreshCssLink();
+        selectTabType = SettingConfig.ins.widgetSettingDto.lastSelectTabType;
         selectAttributeTabId =
             SettingConfig.ins.widgetSettingDto.lastSelectAvId;
+        showBuiltInAttr = SettingConfig.ins.widgetSettingDto.showBuiltInAttr;
+        showCustomAttr = SettingConfig.ins.widgetSettingDto.showCustomAttr;
+
         await refreshBlockAttributeData();
 
         // const endTime = performance.now(); // 记录结束时间
@@ -43,31 +64,48 @@
 
         let tableDtos = processAttributeData(attributeViewKeys);
         refreshAttributeTable(tableDtos);
+        initSelectTab();
     }
 
     function refreshAttributeTable(
         tableDtoMap: Map<string, AttributeTableDto>,
     ) {
         if (tableDtoMap && tableDtoMap.size > 0) {
-            selectTabType = TabType.ATTRIBUTE_TAB;
-
             allTableDtoMap = tableDtoMap;
             selectTableDto = allTableDtoMap.get(selectAttributeTabId);
             if (!selectTableDto) {
                 selectTableDto = allTableDtoMap.values().next().value;
             }
             selectAttributeTabId = selectTableDto.avId;
-        } else {
-            selectTabType = TabType.SETTINGS_TAB;
         }
     }
 
-    function afterRender() {
-        setFrameHeight();
-        setTimeout(() => {
-            setFrameHeight();
-        }, 120);
+    function initSelectTab() {
+        if (!selectTabType) {
+            if (selectTableDto) {
+                selectTabType = TabType.DATABASE_ATTR_TAB;
+            } else if (showBuiltInAttr) {
+                selectTabType = TabType.BUILT_IN_ATTR_TAB;
+            } else if (showCustomAttr) {
+                selectTabType = TabType.CUSTOM_ATTR_TAB;
+            } else {
+                selectTabType = TabType.SETTINGS_TAB;
+            }
+        }
+        if (selectTabType == TabType.DATABASE_ATTR_TAB && !selectTableDto) {
+            selectTabType = null;
+            initSelectTab();
+        }
+        if (selectTabType == TabType.BUILT_IN_ATTR_TAB && !showBuiltInAttr) {
+            selectTabType = null;
+            initSelectTab();
+        }
+        if (selectTabType == TabType.CUSTOM_ATTR_TAB && !showCustomAttr) {
+            selectTabType = null;
+            initSelectTab();
+        }
     }
+
     function setFrameHeight() {
         let contentHeight = document.getElementById("app").offsetHeight + 20;
         if (SettingConfig.ins.widgetCollapsed) {
@@ -102,10 +140,17 @@
         } else if (tabType == TabType.SETTINGS_TAB) {
             selectTabType = tabType;
             selectTableDto = null;
+        } else if (tabType == TabType.BUILT_IN_ATTR_TAB) {
+            selectTabType = tabType;
+            selectTableDto = null;
+            SettingConfig.ins.widgetSettingDto.lastSelectTabType = tabType;
+            SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
+        } else if (tabType == TabType.CUSTOM_ATTR_TAB) {
+            selectTabType = tabType;
+            selectTableDto = null;
+            SettingConfig.ins.widgetSettingDto.lastSelectTabType = tabType;
+            SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
         }
-        // console.log(
-        //     `clickTab selectTabType : ${selectTabType} , tabType ${tabType}`,
-        // );
     }
 
     function clickAttributeTab(
@@ -113,7 +158,7 @@
         tabType: TabType,
         avId: string,
     ) {
-        if (tabType != TabType.ATTRIBUTE_TAB) {
+        if (tabType != TabType.DATABASE_ATTR_TAB) {
             return;
         }
         avTabClickCount++;
@@ -122,6 +167,7 @@
             selectTabType = tabType;
             selectAttributeTabId = avId;
             SettingConfig.ins.widgetSettingDto.lastSelectAvId = avId;
+            SettingConfig.ins.widgetSettingDto.lastSelectTabType = tabType;
             SettingConfig.ins.update(SettingConfig.ins.widgetSettingDto);
             refreshBlockAttributeData();
             setTimeout(() => {
@@ -143,11 +189,6 @@
     }
 
     function handleKeyDownDefault() {}
-
-    // 当发生变化时重新渲染，并在渲染完成后执行afterRender函数
-    $: {
-        afterUpdate(afterRender);
-    }
 </script>
 
 <div class="fn__flex">
@@ -210,14 +251,46 @@
 
         <li class="vertical-separator"></li>
 
+        {#if showBuiltInAttr}
+            <li
+                class="item {selectTabType == TabType.BUILT_IN_ATTR_TAB
+                    ? 'item--focus'
+                    : ''}"
+                on:click={(event) => {
+                    clickTab(event, TabType.BUILT_IN_ATTR_TAB);
+                }}
+                on:keydown={handleKeyDownDefault}
+            >
+                <span class="item__text">内置属性</span>
+            </li>
+        {/if}
+
+        {#if showCustomAttr}
+            <li
+                class="item {selectTabType == TabType.CUSTOM_ATTR_TAB
+                    ? 'item--focus'
+                    : ''}"
+                on:click={(event) => {
+                    clickTab(event, TabType.CUSTOM_ATTR_TAB);
+                }}
+                on:keydown={handleKeyDownDefault}
+            >
+                <span class="item__text">自定义属性</span>
+            </li>
+        {/if}
+
+        {#if showBuiltInAttr || showCustomAttr}
+            <li class="vertical-separator"></li>
+        {/if}
+
         {#each Array.from(allTableDtoMap) as [key, item]}
             <li
-                class="item {selectTabType == TabType.ATTRIBUTE_TAB &&
+                class="item {selectTabType == TabType.DATABASE_ATTR_TAB &&
                 selectAttributeTabId == key
                     ? 'item--focus'
                     : ''} "
                 on:click={(event) => {
-                    clickAttributeTab(event, TabType.ATTRIBUTE_TAB, key);
+                    clickAttributeTab(event, TabType.DATABASE_ATTR_TAB, key);
                 }}
                 on:keydown={handleKeyDownDefault}
             >
@@ -231,8 +304,15 @@
         {#if selectTabType == TabType.SETTINGS_TAB}
             <SettingView />
         {/if}
-        {#if selectTabType == TabType.ATTRIBUTE_TAB && selectTableDto}
-            <BlockAttrViewSvelte tableDto={selectTableDto} />
+        {#if selectTabType == TabType.BUILT_IN_ATTR_TAB}
+            <BlockBuiltInAttrViewSvelte />
+        {/if}
+        {#if selectTabType == TabType.CUSTOM_ATTR_TAB}
+            <BlockCustomAttrViewSvelte />
+        {/if}
+
+        {#if selectTabType == TabType.DATABASE_ATTR_TAB && selectTableDto}
+            <BlockDatabaseViewSvelte tableDto={selectTableDto} />
         {/if}
     {/if}
 </div>
