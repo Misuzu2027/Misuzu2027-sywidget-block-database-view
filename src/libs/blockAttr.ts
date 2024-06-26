@@ -1,3 +1,4 @@
+import { isValidURL } from "@/utils/stringUtil";
 import { getColIconByType } from "./col";
 import { formatDate } from "./dateUtil";
 
@@ -70,8 +71,13 @@ export const genAVValueHTML = (value: IAVCellValue) => {
                 if (item.type === "image") {
                     html += `<img class="av__cellassetimg" src="/${item.content}">`;
                 } else {
-                    html += `<span class="b3-chip b3-chip--middle av__celltext--url" data-url="${item.content}">${item.name}</span>`;
+                    let spanHtml = `<span class="b3-chip b3-chip--middle av__celltext--url" data-url="${item.content}">${item.name}</span>`;
+                    if (isValidURL(item.content)) {
+                        spanHtml = `<a href="${item.content}" target="_blank">${spanHtml}</a>`
+                    }
+                    html += spanHtml;
                 }
+
                 html += `<span class="fn__space"></span>`;
             });
             break;

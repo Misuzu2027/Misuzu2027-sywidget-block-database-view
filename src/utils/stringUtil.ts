@@ -9,3 +9,9 @@ export function isNotBlankStr(s) {
     }
     return true;
 }
+
+
+export function isValidURL(url: string): boolean {
+    const urlRegex = /^(https?:\/\/)?[^\s/$.?#].[^\s]*$/i;
+    return urlRegex.test(url);
+}
